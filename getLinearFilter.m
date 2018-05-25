@@ -14,7 +14,7 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*- 
-## @deftypefn {Function File} {@var{retval} =} getFilter (@var{input1}, @var{input2})
+## @deftypefn {Function File} {@var{retval} =} getLinearFilter (@var{input1}, @var{input2})
 ##
 ## @seealso{}
 ## @end deftypefn
@@ -22,19 +22,17 @@
 ## Author: Chris <chris@chris-XPS-13-9350>
 ## Created: 2018-05-25
 
-function [retval] = getFilter(offset, func)
+function [retval] = getLinearFilter(offset)
 
-  offset = -offset;
-  if(offset(1) < 0)
-      offset(1) = invert1(offset(1));
-    endif
-    if(offset(2) < 0)
-      offset(2) = invert1(offset(2));
-    endif
-    
-    dx = [1 - func(1),func(2)];
-    dy = [func(1),1 - func(2)];
-    
-    retval = dy' * dx;
-
+ if(offset(1) < 0)
+    offset(1) = invert1(offset(1));
+  endif
+  if(offset(2) < 0)
+    offset(2) = invert1(offset(2));
+  endif
+  
+  dx = [1-offset(1), offset(1)];
+  dy = [1-offset(2), offset(2)];
+  
+  retval = dy' * dx;
 endfunction

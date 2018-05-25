@@ -3,10 +3,17 @@ close all;
 
 img = imread("429a.png");
 
-processed = translate(img, [0,1], 1);
+offset = [1,0.5]
+processed = translate(img, offset, "linear");
+barlett = translate(img, offset, "sinc-barlett");
+hamming = translate(img, offset, "sinc-hamming");
 
 i=1;
 
-subplot(2,1,i++), imshow(img,[]), title("original");
+subplot(3,2,i++), imshow(img,[]), title("original");
 
-subplot(2,1,i++), imshow(processed,[]),title("filtered");
+subplot(3,2,i++), imshow(processed,[]),title("linear");
+
+subplot(3,2,i++), imshow(barlett,[]),title("Barlett");
+
+subplot(3,2,i++), imshow(hamming,[]),title("Hamming");

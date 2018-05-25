@@ -22,11 +22,9 @@
 ## Author: Chris <chris@chris-XPS-13-9350>
 ## Created: 2018-05-25
 
-function [retval] = createFilter (type, offset)
-  
-  dx = [1 - offset(1), offset(1)];
-  dy = [1 - offset(2), offset(2)];
-  
-  retval = dx' * dy;
+function [retval] = createFilter (type,offset)
+  #offset= abs(offset);
+  getLinearFilter(offset);
+ 
   
 endfunction

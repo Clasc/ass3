@@ -14,14 +14,15 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*- 
-## @deftypefn {Function File} {@var{retval} =} interpolate (@var{input1}, @var{input2})
+## @deftypefn {Function File} {@var{retval} =} invert1 (@var{input1}, @var{input2})
 ##
 ## @seealso{}
 ## @end deftypefn
 
 ## Author: Chris <chris@chris-XPS-13-9350>
-## Created: 2018-05-24
+## Created: 2018-05-25
 
-function [retval] = interpolate (img, type)
+function [retval] = invert1 (value)
+  retval = 1 + value;
 
 endfunction

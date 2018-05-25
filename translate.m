@@ -30,12 +30,13 @@ function [retval] = translate (img, offset, type)
   if(strcmp(type,'linear'))
     filter = getLinearFilter(offset);
   elseif(strcmp(type,'sinc-barlett'))
-    func = [(1 - offset(1) / m) * sinc(offset(1)), (1 - offset(2) / m) * sinc(offset(1))];
+    func = [(1 - offset(1) / m) * sinc(offset(1)), (1 - offset(2) / m) * sinc(offset(2))];
     filter = getFilter(offset, func);
   elseif(strcmp(type,'sinc-hamming'))
     func = [(0.54 + 0.46*cos(pi*offset(1) / m)) * sinc(offset(1)),(0.54 + 0.46 * cos(pi * offset(2) / m)) * sinc(offset(2))];
     filter = getFilter(offset, func);
   endif;
+  
   disp(filter);
   sum(filter(:))
   retval = conv2(img, filter);

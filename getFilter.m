@@ -24,7 +24,7 @@
 
 function [retval] = getFilter(offset, func)
 
-  offset = -offset;
+  #offset = -offset;
   if(offset(1) < 0)
       offset(1) = invert1(offset(1));
     endif
@@ -32,8 +32,8 @@ function [retval] = getFilter(offset, func)
       offset(2) = invert1(offset(2));
     endif
     
-    dx = [1 - func(1),func(2)];
-    dy = [func(1),1 - func(2)];
+    dx = [1 - func(1),func(1)];
+    dy = [1 - func(2),func(2)];
     
     retval = dy' * dx;
 

@@ -22,26 +22,36 @@
 ## Author: Chris <chris@chris-XPS-13-9350>
 ## Created: 2018-05-24
 
-function [retval] = translate (img, offset, type)
-  #change to other coordinate system
-  offset(2) *= -1 ;
+function [retval] = translate (img, k, type, alpha)
   #image size
+  offset = [1/k, 1/k];
   m = columns(img)*rows(img);
-  if(strcmp(type,'linear'))
-    filter = getLinearFilter(offset);
-  elseif(strcmp(type,'sinc-barlett'))
-    func = [(1 - offset(1) / m) * sinc(offset(1)), (1 - offset(2) / m) * sinc(offset(2))];
-    filter = getFilter(offset, func);
-  elseif(strcmp(type,'sinc-hamming'))
-    func = [(0.54 + 0.46*cos(pi*offset(1) / m)) * sinc(offset(1)),(0.54 + 0.46 * cos(pi * offset(2) / m)) * sinc(offset(2))];
-    filter = getFilter(offset, func);
-  elseif(strcmp(type,'sinc-rect'))
-    func = [1 * sinc(offset(1)), 1 * sinc(offset(2))];
-    filter = getFilter(offset, func);
-  endif;
-  
+  retval = img;
+  for i=1:k
+    if(strcmp(type,'linear'))
+      filter = getLinearFilter(offset);
+    
+    elseif(strcmp(type,'sinc-barlett'))
+      func = [(1 - abs(offset(1)) / m) * sinc(abs(offset(1))), (1 - abs(offset(2)) / m) * sinc(abs(offset(2)))];
+      filter = getFilter(offset, func);
+    
+    elseif(strcmp(type,'sinc-hamming'))
+      func = [(0.54 + 0.46*cos(pi * abs (offset(1)) / m)) * sinc(abs(offset(1))),(0.54 + 0.46 * cos(pi * abs(offset(2)) / m)) * sinc(abs(offset(2)))];
+      filter = getFilter(offset, func);
+    elseif(strcmp(type,'sinc-rect'))
+    
+      func = [1 * sinc(offset(1)), 1 * sinc(offset(2))];
+      filter = getFilter(offset, func);
+    
+    elseif(strcmp(type,'cubic') && alpha != 0)
+      filter = getCubicFilter(offset,alpha);
+      
+    elseif(strcmp(type,'b-spline'))
+      filter = getBspline(offset);
+    endif;
+    retval = conv2(retval,filter);
+  endfor
   disp(filter);
   sum(filter(:))
-  retval = conv2(img, filter);
   
 endfunction

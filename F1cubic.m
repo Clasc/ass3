@@ -14,26 +14,14 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*- 
-## @deftypefn {Function File} {@var{retval} =} getBarlettSinc (@var{input1}, @var{input2})
+## @deftypefn {Function File} {@var{retval} =} generateFcubic (@var{input1}, @var{input2})
 ##
 ## @seealso{}
 ## @end deftypefn
 
 ## Author: Chris <chris@chris-XPS-13-9350>
-## Created: 2018-05-25
+## Created: 2018-05-26
 
-function [retval] = getBarlettSinc (offset, func)
- 
-  if(offset(1) < 0)
-      offset(1) = invert1(offset(1));
-    endif
-    if(offset(2) < 0)
-      offset(2) = invert1(offset(2));
-    endif
-    
-    dx = [1-func(1), func(2)];
-    dy = [1-func(1), func(2)];
-    
-    retval = dy' * dx;
-
+function [retval] = F1cubic (x, alpha)
+  retval = ((alpha + 2)*abs(x)^3 - (alpha + 3)*abs(x)^2 + 1) ;
 endfunction

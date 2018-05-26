@@ -23,8 +23,9 @@
 ## Created: 2018-05-25
 
 function [retval] = getLinearFilter(offset)
-
- if(offset(1) < 0)
+  #change to other coordinate system
+  offset(2) *= -1 ;
+  if(offset(1) < 0)
     offset(1) = invert1(offset(1));
   endif
   if(offset(2) < 0)

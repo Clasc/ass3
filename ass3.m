@@ -3,7 +3,7 @@ close all;
 
 img = imread("429a.png");
 
-k = 6;
+k = 7;
 processed = translate(img, k, "linear");
 barlett = translate(img, k, "sinc-barlett");
 hamming = translate(img, k, "sinc-hamming");

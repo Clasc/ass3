@@ -23,11 +23,20 @@
 ## Created: 2018-05-24
 
 function [retval] = translate (img, k, type, alpha)
+  ogcols = columns(img);
+  ogrows = rows(img);
+  
   #image size
+  img = [img,img,img
+         img,img,img
+         img,img,img];
+         
+ 
   offset = [1/k, 1/k];
   m = columns(img)*rows(img);
   retval = img;
-  for i=1:k
+  
+  for i=1:abs(k)
     if(strcmp(type,'linear'))
       filter = getLinearFilter(offset);
     
@@ -51,6 +60,7 @@ function [retval] = translate (img, k, type, alpha)
     endif;
     retval = conv2(retval,filter);
   endfor
+   retval = retval(ogrows:ogrows* 2, ogcols:ogcols* 2);
   disp(filter);
   sum(filter(:))
   

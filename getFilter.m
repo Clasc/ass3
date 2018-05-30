@@ -30,7 +30,7 @@ function [retval] = getFilter(offset, func)
     endif
     if(offset(2) < 0)
       offset(2) += 1;
-    endif
+    end
     
     dx = [func(1), 1 - func(1)];
     dy = [1 - func(2), func(2)];

@@ -29,7 +29,7 @@ function [retval] = getBspline (offset)
   endif
   if(offset(2) < 0)
     offset(2) = invert1(offset(2));
-  endif
+  end
   
   dx = [F2spline(offset(1) - 2), F1spline(offset(1) - 1), F1spline(offset(1)), F2spline(offset(1) + 1)];
   dy = [F2spline(offset(2) + 1), F1spline(offset(2)), F1spline(offset(2) -1), F2spline(offset(2) - 2)];

@@ -33,11 +33,10 @@ function [retval] = translate (img, k, type, alpha)
          
  
   offset = [1/k, 1/k];
-  m = columns(img)*rows(img);
+  m = 2;
   retval = img;
   
-  for i=1:abs(k)
-    if(strcmp(type,'linear'))
+  if(strcmp(type,'linear'))
       filter = getLinearFilter(offset);
     
     elseif(strcmp(type,'sinc-barlett'))
@@ -57,10 +56,15 @@ function [retval] = translate (img, k, type, alpha)
       
     elseif(strcmp(type,'b-spline'))
       filter = getBspline(offset);
-    endif;
-    retval = conv2(retval,filter);
+    end;
+  
+  for i=1:abs(k)
+    retval = conv2(retval,filter, 'same');
   endfor
-   retval = retval(ogrows:ogrows* 2, ogcols:ogcols* 2);
+  retval = retval(ogrows :ogrows * 2 -(k/abs(k)) , ogcols :ogcols * 2 -(k/abs(k)));
+  disp(type);
+  disp(size(retval));
+  
   disp(filter);
   sum(filter(:))
   

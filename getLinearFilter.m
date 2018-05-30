@@ -30,7 +30,7 @@ function [retval] = getLinearFilter(offset)
   endif
   if(offset(2) < 0)
     offset(2) = invert1(offset(2));
-  endif
+  end
   
   dx = [1-offset(1), offset(1)];
   dy = [1-offset(2), offset(2)];

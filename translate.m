@@ -1,71 +1,121 @@
-## Copyright (C) 2018 Chris
-## 
-## This program is free software; you can redistribute it and/or modify it
-## under the terms of the GNU General Public License as published by
-## the Free Software Foundation; either version 3 of the License, or
-## (at your option) any later version.
-## 
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-## 
-## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% Author: Christian Lascsak
+% Matr. Nr: 0136374
 
-## -*- texinfo -*- 
-## @deftypefn {Function File} {@var{retval} =} translate (@var{input1}, @var{input2})
-##
-## @seealso{}
-## @end deftypefn
 
-## Author: Chris <chris@chris-XPS-13-9350>
-## Created: 2018-05-24
+function [retval] = translate (varargin)
 
-function [retval] = translate (img, k, type, alpha)
+ options = size(varargin)(2);
+  if(options == 6);
+    if(strcmp(varargin{1}, '-i'))
+      img = imread(varargin{2});
+    end
+    if(strcmp(varargin{3},'-k'))
+      k = varargin{4};
+    end
+    if(strcmp(varargin{5}, '-o'))
+      output = varargin{6}; 
+    end
+  k = str2num(k);
+  end
+  
   ogcols = columns(img);
   ogrows = rows(img);
-  
-  #image size
+
   img = [img,img,img
          img,img,img
          img,img,img];
          
  
   offset = [1/k, 1/k];
-  m = 2;
-  retval = img;
+  offset
   
-  if(strcmp(type,'linear'))
-      filter = getLinearFilter(offset);
-    
-    elseif(strcmp(type,'sinc-barlett'))
-      func = [(1 - abs(offset(1)) / m) * sinc(abs(offset(1))), (1 - abs(offset(2)) / m) * sinc(abs(offset(2)))];
-      filter = getFilter(offset, func);
-    
-    elseif(strcmp(type,'sinc-hamming'))
-      func = [(0.54 + 0.46*cos(pi * abs (offset(1)) / m)) * sinc(abs(offset(1))),(0.54 + 0.46 * cos(pi * abs(offset(2)) / m)) * sinc(abs(offset(2)))];
-      filter = getFilter(offset, func);
-    elseif(strcmp(type,'sinc-rect'))
-    
-      func = [1 * sinc(offset(1)), 1 * sinc(offset(2))];
-      filter = getFilter(offset, func);
-    
-    elseif(strcmp(type,'cubic') && alpha != 0)
-      filter = getCubicFilter(offset,alpha);
-      
-    elseif(strcmp(type,'b-spline'))
-      filter = getBspline(offset);
-    end;
   
+  linear = img;
+  bartlett = img;
+  hamming = img;
+  rect = img;
+  cubic = img;
+  bspline = img;
+  filter = createFilter("linear",img, offset);
   for i=1:abs(k)
-    retval = conv2(retval,filter, 'same');
+    linear = conv2(linear, filter, 'full');
   endfor
-  retval = retval(ogrows :ogrows * 2 -(k/abs(k)) , ogcols :ogcols * 2 -(k/abs(k)));
-  disp(type);
-  disp(size(retval));
-  
+   
+  filter = createFilter("sinc-barlett",img, offset);
   disp(filter);
-  sum(filter(:))
+  for i=1:abs(k)
+    bartlett = conv2(bartlett, filter, 'full');
+  endfor
+  
+  filter = createFilter("sinc-hamming",img, offset);
+  disp(filter);
+  for i=1:abs(k)
+    hamming = conv2(hamming, filter, 'full');
+  endfor
+  
+  filter = createFilter("sinc-rect",img, offset);
+  disp(filter);
+  for i=1:abs(k)
+    rect = conv2(rect, filter, 'full');
+  endfor
+  
+  filter = createFilter("cubic",img, offset, -1);
+  disp(filter);
+  for i=1:abs(k)
+    cubic = conv2(cubic, filter, 'full');
+  endfor
+  
+  filter = createFilter("b-spline",img, offset);
+  disp(filter);
+  for i=1:abs(k)
+    bspline = conv2(bspline, filter, 'full');
+  endfor
+  
+  img = cutImage(img, ogrows, ogcols, k);
+  disp("original");
+  size(img)
+  
+  linear = cutImage(linear, ogrows, ogcols, k);
+  
+  size(linear)
+  
+  bartlett = cutImage(bartlett, ogrows, ogcols, k);
+  size(bartlett)
+  
+  hamming= cutImage(hamming, ogrows, ogcols, k);
+  size(hamming)
+  
+  rect = cutImage(rect, ogrows, ogcols, k);
+  size(rect)
+  
+  cubic = cutImage(cubic, ogrows, ogcols, k);
+  size(cubic)
+  
+  bspline = cutImage(bspline, ogrows, ogcols, k);
+  size(bspline)
+  
+  i=1;
+  rows = 3;
+  cols = 3;
+
+  subplot(rows, cols, i++), imshow(img,[]), title("original");
+
+  subplot(rows, cols, i++), imshow(linear,[]),title("linear");
+
+  subplot(rows, cols, i++), imshow(bartlett,[]),title("Barlett");
+
+  subplot(rows, cols, i++), imshow(hamming,[]),title("Hamming");
+
+  subplot(rows, cols, i++), imshow(rect,[]),title("Rectangle");
+
+  subplot(rows, cols, i++), imshow(cubic,[]),title("Cubic");
+
+  subplot(rows, cols, i++), imshow(bspline,[]),title("B-spline");
+  
+  
+  rmse = RMSE(img,linear)
+  
+  are = ARE (img,linear)
+  
   
 endfunction

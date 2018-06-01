@@ -1,7 +1,5 @@
 
 function [retval] = ARE (original, final)
-  m = rows(final);
-  n = columns(final);
-  retval = sum((final./original)(:))/(m*n);
-  
+  diff = final - original;
+  retval = mean(abs(diff./original)(:));
 endfunction

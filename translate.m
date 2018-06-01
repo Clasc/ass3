@@ -15,19 +15,16 @@ function [retval] = translate (varargin)
     if(strcmp(varargin{5}, '-o'))
       output = varargin{6}; 
     end
+    
   k = str2num(k);
   end
   
   ogcols = columns(img);
   ogrows = rows(img);
-
-  img = [img,img,img
-         img,img,img
-         img,img,img];
          
  
   offset = [1/k, 1/k];
-  offset
+ 
   
   
   linear = img;
@@ -36,63 +33,76 @@ function [retval] = translate (varargin)
   rect = img;
   cubic = img;
   bspline = img;
+  
   filter = createFilter("linear",img, offset);
   for i=1:abs(k)
+    linear = [linear,linear, linear;
+              linear,linear, linear;
+              linear,linear, linear];
+              
     linear = conv2(linear, filter, 'full');
+    
+    linear = cutImage(linear, ogrows, ogcols, k, 2);
+    
+    
   endfor
    
   filter = createFilter("sinc-barlett",img, offset);
   disp(filter);
   for i=1:abs(k)
+   bartlett = [bartlett,bartlett, bartlett;
+              bartlett,bartlett, bartlett;
+              bartlett,bartlett, bartlett];
+              
     bartlett = conv2(bartlett, filter, 'full');
+    bartlett = cutImage(bartlett, ogrows, ogcols, k, 2);
+    
   endfor
   
   filter = createFilter("sinc-hamming",img, offset);
   disp(filter);
   for i=1:abs(k)
+    hamming = [hamming, hamming, hamming;
+               hamming, hamming, hamming;
+               hamming, hamming, hamming];
+               
     hamming = conv2(hamming, filter, 'full');
+    hamming= cutImage(hamming, ogrows, ogcols, k, 2);
   endfor
   
   filter = createFilter("sinc-rect",img, offset);
   disp(filter);
   for i=1:abs(k)
+  
+   rect = [rect, rect, rect;
+           rect, rect, rect;
+           rect, rect, rect];
+               
     rect = conv2(rect, filter, 'full');
+    rect = cutImage(rect, ogrows, ogcols, k, 2);
   endfor
   
   filter = createFilter("cubic",img, offset, -1);
   disp(filter);
   for i=1:abs(k)
+   cubic = [cubic, cubic, cubic;
+            cubic, cubic, cubic;
+            cubic, cubic, cubic];
+               
     cubic = conv2(cubic, filter, 'full');
+    cubic = cutImage(cubic, ogrows, ogcols, k, 4);
   endfor
   
   filter = createFilter("b-spline",img, offset);
   disp(filter);
   for i=1:abs(k)
+    bspline = [bspline, bspline, bspline;
+               bspline, bspline, bspline;
+               bspline, bspline, bspline];
     bspline = conv2(bspline, filter, 'full');
+    
+    bspline = cutImage(bspline, ogrows, ogcols, k, 4);
   endfor
-  
-  img = cutImage(img, ogrows, ogcols, k);
-  disp("original");
-  size(img)
-  
-  linear = cutImage(linear, ogrows, ogcols, k);
-  
-  size(linear)
-  
-  bartlett = cutImage(bartlett, ogrows, ogcols, k);
-  size(bartlett)
-  
-  hamming= cutImage(hamming, ogrows, ogcols, k);
-  size(hamming)
-  
-  rect = cutImage(rect, ogrows, ogcols, k);
-  size(rect)
-  
-  cubic = cutImage(cubic, ogrows, ogcols, k);
-  size(cubic)
-  
-  bspline = cutImage(bspline, ogrows, ogcols, k);
-  size(bspline)
   
   i=1;
   rows = 3;
@@ -112,10 +122,17 @@ function [retval] = translate (varargin)
 
   subplot(rows, cols, i++), imshow(bspline,[]),title("B-spline");
   
+  size(linear)
+  size(bartlett)
+  size(hamming)
+  size(rect)
+  size(cubic)
+  size(bspline)
   
-  rmse = RMSE(img,linear)
   
-  are = ARE (img,linear)
+  %rmse = RMSE(img,linear)
+  
+  %are = ARE (img,linear)
   
   
 endfunction

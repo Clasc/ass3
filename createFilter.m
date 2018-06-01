@@ -1,6 +1,13 @@
 
 function [retval] = createFilter (type, img, offset, alpha)
    m = 2;
+   if(offset(1) < 0)
+    offset(1) = invert1(offset(1));
+   end
+   if(offset(2) < 0)
+    offset(2) = invert1(offset(2));
+   end
+   
   if(strcmp(type,'linear'))
       retval = getLinearFilter(offset);
     

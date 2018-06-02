@@ -29,4 +29,5 @@ function [retval] = createFilter (type, img, offset, alpha)
     elseif(strcmp(type,'b-spline'))
       retval = getBspline(offset);
     end;
-endfunction
+end
+

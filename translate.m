@@ -32,6 +32,8 @@ function [retval] = translate (varargin)
   hamming = img;
   rect = img;
   cubic = img;
+  cubic05 = img;
+  cubic075 = img;
   bspline = img;
   
   filter = createFilter("linear",img, offset);
@@ -92,6 +94,28 @@ function [retval] = translate (varargin)
     cubic = conv2(cubic, filter, 'full');
     cubic = cutImage(cubic, ogrows, ogcols, k, 4);
   endfor
+   
+  filter = createFilter("cubic",img, offset, -0.75);
+  disp(filter);
+  for i=1:abs(k)
+   cubic075 = [cubic075, cubic075, cubic075;
+            cubic075, cubic075, cubic075;
+            cubic075, cubic075, cubic075];
+               
+    cubic075 = conv2(cubic075, filter, 'full');
+    cubic075 = cutImage(cubic075, ogrows, ogcols, k, 4);
+  endfor
+   
+  filter = createFilter("cubic",img, offset, -0.5);
+  disp(filter);
+  for i=1:abs(k)
+   cubic05 = [cubic05 , cubic05 , cubic05;
+            cubic05 , cubic05 , cubic05;
+            cubic05 , cubic05 , cubic05];
+               
+    cubic05 = conv2(cubic05, filter, 'full');
+    cubic05 = cutImage(cubic05, ogrows, ogcols, k, 4);
+  endfor
   
   filter = createFilter("b-spline",img, offset);
   disp(filter);
@@ -112,13 +136,17 @@ function [retval] = translate (varargin)
 
   subplot(rows, cols, i++), imshow(linear,[]),title("linear");
 
-  subplot(rows, cols, i++), imshow(bartlett,[]),title("Barlett");
+  subplot(rows, cols, i++), imshow(bartlett,[]),title("Bartlett");
 
   subplot(rows, cols, i++), imshow(hamming,[]),title("Hamming");
 
   subplot(rows, cols, i++), imshow(rect,[]),title("Rectangle");
 
-  subplot(rows, cols, i++), imshow(cubic,[]),title("Cubic");
+  subplot(rows, cols, i++), imshow(cubic,[]),title("Cubic - alpha = -1");
+  
+  subplot(rows, cols, i++), imshow(cubic075,[]),title("Cubic - alpha = -0.75");
+  
+  subplot(rows, cols, i++), imshow(cubic05,[]),title("Cubic - alpha = -0.5");
 
   subplot(rows, cols, i++), imshow(bspline,[]),title("B-spline");
   
@@ -129,10 +157,16 @@ function [retval] = translate (varargin)
   size(cubic)
   size(bspline)
   
+  %Plot the graph
+  [linrmse,linare]= imdif(img,linear)
+  [bartrmse,bartare] = imdif(img, bartlett);
+  [hammrmse,hammare]= imdif(img,hamming);
+  [rectrmse,rectare]= imdif(img,rect);
+  [cubicrmse,cubicare]= imdif(img,cubic);
+  [c05rmse, c05are] = imdif(img, cubic05);
+  [c075rmse, c075are] = imdif(img, cubic075);
+  [bsplinrmse,bsplinare]= imdif(img,bspline);
+  figure,plot(linrmse, linare, bartrmse, bartare, hammrmse, hammare, rectrmse, rectare, cubicrmse, cubicare,c075rmse, c075are, c05rmse, c05are, bsplinrmse, bsplinare), title ("Error Graph");
   
-  %rmse = RMSE(img,linear)
   
-  %are = ARE (img,linear)
-  
-  
-endfunction
+end

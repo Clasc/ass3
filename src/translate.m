@@ -37,7 +37,7 @@ function [retval] = translate (varargin)
   cubic075 = img;
   bspline = img;
   
-  filter = createFilter("linear", offset);
+  filter = createFilter('linear', offset);
   for i=1:abs(k)
     linear = [linear,linear, linear;
               linear,linear, linear;
@@ -48,9 +48,9 @@ function [retval] = translate (varargin)
     linear = cutImage(linear, ogrows, ogcols, k, 2);
     
     
-  endfor
+  end
    
-  filter = createFilter("sinc-barlett", offset);
+  filter = createFilter('sinc-barlett', offset);
   
   for i=1:abs(k)
    bartlett = [bartlett,bartlett, bartlett;
@@ -60,9 +60,9 @@ function [retval] = translate (varargin)
     bartlett = conv2(bartlett, filter, 'full');
     bartlett = cutImage(bartlett, ogrows, ogcols, k, 2);
     
-  endfor
+  end
   
-  filter = createFilter("sinc-hamming", offset);
+  filter = createFilter('sinc-hamming', offset);
   
   for i=1:abs(k)
     hamming = [hamming, hamming, hamming;
@@ -71,9 +71,9 @@ function [retval] = translate (varargin)
                
     hamming = conv2(hamming, filter, 'full');
     hamming= cutImage(hamming, ogrows, ogcols, k, 2);
-  endfor
+  end
   
-  filter = createFilter("sinc-rect", offset);
+  filter = createFilter('sinc-rect', offset);
   
   for i=1:abs(k)
   
@@ -83,9 +83,9 @@ function [retval] = translate (varargin)
                
     rect = conv2(rect, filter, 'full');
     rect = cutImage(rect, ogrows, ogcols, k, 2);
-  endfor
+  end
   
-  filter = createFilter("cubic", offset, -1);
+  filter = createFilter('cubic', offset, -1);
    
   for i=1:abs(k)
    cubic = [cubic, cubic, cubic;
@@ -94,9 +94,9 @@ function [retval] = translate (varargin)
                
     cubic = conv2(cubic, filter, 'full');
     cubic = cutImage(cubic, ogrows, ogcols, k, 4);
-  endfor
+  end
    
-  filter = createFilter("cubic", offset, -0.75);
+  filter = createFilter('cubic', offset, -0.75);
   
   for i=1:abs(k)
    cubic075 = [cubic075, cubic075, cubic075;
@@ -105,9 +105,9 @@ function [retval] = translate (varargin)
                
     cubic075 = conv2(cubic075, filter, 'full');
     cubic075 = cutImage(cubic075, ogrows, ogcols, k, 4);
-  endfor
-   
-  filter = createFilter("cubic", offset, -0.5);
+  end
+  
+  filter = createFilter('cubic', offset, -0.5);
   
   for i=1:abs(k)
    cubic05 = [cubic05 , cubic05 , cubic05;
@@ -119,7 +119,7 @@ function [retval] = translate (varargin)
     cubic05 = cutImage(cubic05, ogrows, ogcols, k, 4);
   end
   
-  filter = createFilter("b-spline", offset);
+  filter = createFilter('b-spline', offset);
   
   for i=1:abs(k)
     bspline = [bspline, bspline, bspline;
@@ -133,23 +133,23 @@ function [retval] = translate (varargin)
   rows = 3;
   cols = 3;
 
-  subplot(rows, cols, i), imshow(img), title("original");
+  subplot(rows, cols, i), imshow(img), title('original');
   i = i+1;
-  subplot(rows, cols, i), imshow(linear,[]),title("linear");
+  subplot(rows, cols, i), imshow(linear,[]),title('linear');
   i = i+1;
-  subplot(rows, cols, i), imshow(bartlett,[]),title("Bartlett");
+  subplot(rows, cols, i), imshow(bartlett,[]),title('Bartlett');
   i = i+1;
-  subplot(rows, cols, i), imshow(hamming,[]),title("Hamming");
+  subplot(rows, cols, i), imshow(hamming,[]),title('Hamming');
   i = i+1;
-  subplot(rows, cols, i), imshow(rect,[]),title("Rectangle");
+  subplot(rows, cols, i), imshow(rect,[]),title('Rectangle');
   i = i+1;
-  subplot(rows, cols, i), imshow(cubic,[]),title("Cubic - alpha = -1");
+  subplot(rows, cols, i), imshow(cubic,[]),title('Cubic - alpha = -1');
   i = i+1;
-  subplot(rows, cols, i), imshow(cubic075,[]),title("Cubic - alpha = -0.75");
+  subplot(rows, cols, i), imshow(cubic075,[]),title('Cubic - alpha = -0.75');
   i = i+1;
-  subplot(rows, cols, i), imshow(cubic05,[]),title("Cubic - alpha = -0.5");
+  subplot(rows, cols, i), imshow(cubic05,[]),title('Cubic - alpha = -0.5');
   i = i+1;
-  subplot(rows, cols, i), imshow(bspline,[]),title("B-spline");
+  subplot(rows, cols, i), imshow(bspline,[]),title('B-spline');
   
   
   %Plot the graph
@@ -162,11 +162,13 @@ function [retval] = translate (varargin)
   [c075rmse, c075are] = imdif(img, cubic075);
   [bsplinrmse,bsplinare]= imdif(img,bspline);
   figure,plot(linrmse, linare,bartrmse, bartare, hammrmse, hammare, rectrmse, rectare, cubicrmse, cubicare, c075rmse, c075are, c05rmse, c05are, bsplinrmse, bsplinare);
-  xlabel("RMSE");
-  ylabel("ARE");
-  title ("Error Graph"),
-  legend("Linear", "Bartlett","Hamming","Rectangle-Sinc","Cubic (a=-1)","Cubic (a=-0.75)","Cubic (a=-0.5)", "B-Spline");
+  xlabel('RMSE');
+  ylabel('ARE');
+  title ('Error Graph'),
+  legend('Linear', 'Bartlett','Hamming','Rectangle-Sinc','Cubic (a=-1)','Cubic (a=-0.75)','Cubic (a=-0.5)', 'B-Spline');
   legend('Location', 'northwestoutside');
   
-  
+  %rownames = ['Linear'; 'Bartlett';'Hamming';'Rectangle-Sinc';'Cubic (a=-1)';'Cubic (a=-0.75)';'Cubic (a=-0.5)'; 'B-Spline'];
+  m = [linrmse, linare; bartrmse, bartare; hammrmse, hammare; rectrmse, rectare; cubicrmse, cubicare; c075rmse, c075are; c05rmse, c05are; bsplinrmse, bsplinare];
+  csvwrite(output,m);
 end

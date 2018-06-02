@@ -16,4 +16,4 @@ function [retval] = getBspline (offset)
     retval = dx'.*dy;
   
   
-endfunction
+end

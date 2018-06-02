@@ -17,4 +17,4 @@ function [retval] = getCubicFilter (offset, alpha)
     retval = dx'.*dy;
   
   
-endfunction
+end

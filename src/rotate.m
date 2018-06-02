@@ -42,6 +42,7 @@ function [retval] = rotate (varargin)
   end
  
    
+   
   for i = 1:k
       bartlett = rotation(img, bartlett, angle, i, 'sinc-barlett',0);
       
@@ -96,7 +97,7 @@ function [retval] = rotate (varargin)
   subplot(3,3,i),imshow(bspline,[]);
   i=i+1;
   
-  [linrmse,linare]= imdif(img,linear);
+  [linrmse,linare]= imdif(img,linear)
   [bartrmse,bartare] = imdif(img, bartlett);
   [hammrmse,hammare]= imdif(img,hamming);
   [rectrmse,rectare]= imdif(img,rect);
@@ -105,11 +106,12 @@ function [retval] = rotate (varargin)
   [c075rmse, c075are] = imdif(img, cubic075);
   [bsplinrmse,bsplinare]= imdif(img,bspline);
   figure,plot(linrmse, linare,bartrmse, bartare, hammrmse, hammare, rectrmse, rectare, cubicrmse, cubicare, c075rmse, c075are, c05rmse, c05are, bsplinrmse, bsplinare);
-  xlabel("RMSE");
-  ylabel("ARE");
-  title ("Error Graph"),
-  legend("Linear", "Bartlett","Hamming","Rectangle-Sinc","Cubic (a=-1)","Cubic (a=-0.75)","Cubic (a=-0.5)", "B-Spline");
+  xlabel('RMSE');
+  ylabel('ARE');
+  title ('Error Graph'),
+  legend('Linear', 'Bartlett','Hamming','Rectangle-Sinc','Cubic (a=-1)','Cubic (a=-0.75)','Cubic (a=-0.5)', 'B-Spline');
   legend('Location', 'northwestoutside');
-  
+  m = [linrmse, linare; bartrmse, bartare; hammrmse, hammare; rectrmse, rectare; cubicrmse, cubicare; c075rmse, c075are; c05rmse, c05are; bsplinrmse, bsplinare];
+  csvwrite(output,m);
   
 end

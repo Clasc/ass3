@@ -7,4 +7,4 @@ function [retval] = RMSE (bef, after)
   quad = imdif.^2;
   summ = mean(quad(:));
   retval = sqrt(summ);
-endfunction
+end

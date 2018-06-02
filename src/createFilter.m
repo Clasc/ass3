@@ -1,5 +1,5 @@
 
-function [retval] = createFilter (type, img, offset, alpha)
+function [retval] = createFilter (type, offset, alpha)
    m = 2;
    if(offset(1) < 0)
     offset(1) = invert1(offset(1));

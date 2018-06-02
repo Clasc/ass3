@@ -2,7 +2,7 @@
 function [retval] = rotation (img, rotimg, angle, i, type, alpha)
   [h w] = size(rotimg);
   %how much the image has already rotated
-  [targetheight targetwidth]= calcSize(img, angle * i)
+  [targetheight targetwidth]= calcSize(img, angle * i);
   angle = deg2rad(angle);
   heightoffset = (targetheight - 1) / 2.0 -1;
   widthoffset = (targetwidth - 1) / 2.0 -1;

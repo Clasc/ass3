@@ -1,5 +1,5 @@
 
-function [] = showcase_translate ()
+function [] = showcase_rotate ()
   addpath('./src');
-  rotate -i src/lena_gray_256.tif -k 100 -o test;
+  rotate -i src/lena.png -k 100 -o test;
 end

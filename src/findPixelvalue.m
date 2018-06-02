@@ -24,8 +24,6 @@ function [retval] = findPixelvalue(img, x, y, type, alpha)
      end
   
   
-     filter
-     sum(filter(:))
      
      retval = sum((n.*filter)(:));
      
